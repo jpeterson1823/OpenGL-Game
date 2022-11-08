@@ -1,0 +1,24 @@
+#pragma once
+
+#include <vector>
+#include <glm/glm.hpp>
+
+#include "Player.hpp"
+#include "BasicEntity.hpp"
+
+class World {
+private:
+	std::vector<BasicEntity*> entities;
+
+private:
+	void animateEntities(float dt);
+public:
+	World();
+	~World();
+
+	void turn(float dt);
+	void spawnEnemy(glm::vec2 pos);
+
+	Player* getPlayer();
+	std::vector<BasicEntity*> getEntities();
+};
