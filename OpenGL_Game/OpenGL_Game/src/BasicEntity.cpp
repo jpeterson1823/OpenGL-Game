@@ -30,7 +30,7 @@ BasicEntity::BasicEntity(float maxHealth, Shader* shader, Texture2D* texture) {
 	float xSpriteUnit = spriteDimension / imgWidth;
 	float ySpriteUnit = spriteDimension / imgHeight;
 
-	int y = 7;
+	int y = 6;
 	for (int x = 0; x < 5; x++) {
 		float xStart = x * xSpriteUnit;
 		float yEnd = (y + 1.0f) * ySpriteUnit;

@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\peter\source\repos\OpenGL_Game\OpenGL_Game\include;C:\Users\peter\Documents\glm;C:\Users\peter\Documents\glad\include;C:\Users\peter\Documents\glfw-3.3.8\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\peter\Documents\GitHub\OpenGL-Game\OpenGL_Game\OpenGL_Game\include;C:\Users\peter\Documents\glm;C:\Users\peter\Documents\glad\include;C:\Users\peter\Documents\glfw-3.3.8\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\peter\Documents\glfw-3.3.8\lib-vc2022;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -133,7 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\Documents\glad\src\glad.c" />
+    <ClCompile Include="..\..\..\..\glad\src\glad.c" />
     <ClCompile Include="src\BasicEntity.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\EnemyEntity.cpp" />
@@ -144,6 +144,7 @@
     <ClCompile Include="src\Source.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\Texture2D.cpp" />
+    <ClCompile Include="src\Tile.cpp" />
     <ClCompile Include="src\Window.cpp" />
     <ClCompile Include="src\World.cpp" />
   </ItemGroup>
@@ -158,6 +159,7 @@
     <ClInclude Include="include\Sprite.hpp" />
     <ClInclude Include="include\stb_image.h" />
     <ClInclude Include="include\Texture2D.hpp" />
+    <ClInclude Include="include\Tile.hpp" />
     <ClInclude Include="include\Window.hpp" />
     <ClInclude Include="include\World.hpp" />
   </ItemGroup>

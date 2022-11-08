@@ -12,6 +12,7 @@
 #include "Player.hpp"
 #include "EnemyEntity.hpp"
 #include "Line.hpp"
+#include "Tile.hpp"
 
 //#define _CRTDBG_MAP_ALLOC
 //#include <crtdbg.h>
@@ -48,6 +49,30 @@ int main(int argc, char* argv[]) {
 	Renderer renderer(&camera, SCR_WIDTH, SCR_HEIGHT);
 	Shader lineShader("graphics/shaders/line.vert", "graphics/shaders/line.frag");
 
+
+	
+	/*// Tile-base background test. has some odd artifacting
+	// generate tile and shader texture
+	Shader* tileShader = new Shader(
+		"graphics/shaders/background.vert",
+		"graphics/shaders/background.frag"
+	);
+	Texture2D* tileTexture = new Texture2D(
+		"graphics/textures/tiles/zeo254.png",
+		true
+	);
+	std::vector<Tile*> tiles;
+	int dimension = 32;
+	float scale = 40.0f;
+	Tile* tile;
+	for (int y = -dimension / 2; y < dimension / 2 + 1; y++) {
+		for (int x = -dimension / 2; x < dimension / 2 + 1; x++) {
+			//std::cout << "Placing tile at (" << (float)x << ',' << (float)y << ")\n";
+			tile = new Tile(glm::vec2((float)x, (float)y), tileShader, tileTexture);
+			tiles.push_back(tile);
+		}
+	}*/
+
 	// spawn test dummy
 	world.spawnEnemy(glm::vec2(0.0f, 0.5f));
 
@@ -71,12 +96,20 @@ int main(int argc, char* argv[]) {
 		world.turn(deltaTime);
 		renderer.renderWorld(world);
 		renderer.drawLine(mouseTrace);
+		//for (Tile* t : tiles)
+		//	renderer.renderTile(*t);
 		renderer.update();
 
 		// check & call events + swap buffers
 		glfwPollEvents();
 		glfwSwapBuffers(window.ptr());
 	}
+
+	//for (Tile* t : tiles)
+	//	delete t;
+
+	//delete tileShader;
+	//delete tileTexture;
 	
 	window.terminate();
 	//_CrtDumpMemoryLeaks();

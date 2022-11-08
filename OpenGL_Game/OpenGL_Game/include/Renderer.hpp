@@ -5,6 +5,7 @@
 #include "BasicEntity.hpp"
 #include "Camera.hpp"
 #include "Line.hpp"
+#include "Tile.hpp"
 
 class Renderer {
 private:
@@ -16,6 +17,7 @@ public:
 	void renderEntity(BasicEntity& e);
 	void renderWorld(World& world);
 	void renderSprite(Sprite& sprite);
+	void renderTile(Tile& tile);
 	void drawLine(Line& line);
 	glm::mat4 getView();
 	glm::mat4 getProjection();

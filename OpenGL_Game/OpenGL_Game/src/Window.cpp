@@ -10,8 +10,8 @@ Window::Window(unsigned int width, unsigned int height)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// create window pointer
-	//self = glfwCreateWindow(width, height, "Name TBD", glfwGetPrimaryMonitor(), NULL);
-	self = glfwCreateWindow(width, height, "Name TBD", NULL, NULL);
+	self = glfwCreateWindow(width, height, "Name TBD", glfwGetPrimaryMonitor(), NULL);
+	//self = glfwCreateWindow(width, height, "Name TBD", NULL, NULL);
 	if (self == NULL) {
 		std::cout << "[ERROR] Failed to create GLFW window." << std::endl;
 		glfwTerminate();
