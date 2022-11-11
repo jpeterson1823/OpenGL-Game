@@ -9,14 +9,9 @@ protected:
 	float MIN_POS;
 	float maxHealth;
 	float health;
-	float animationCounter;
-	float animationDelay;
 	bool living;
 	bool moving;
 
-	char currentSprite;
-	std::vector<Sprite*> idleSprites;
-	std::vector<Sprite*> activeSprites;
 	glm::vec2 pos;
 	glm::mat4 model;
 
@@ -24,7 +19,7 @@ protected:
 
 public:
 	//BasicEntity(float maxHealth, const char* vertPath, const char* fragPath, std::string texFolderPath);
-	BasicEntity(float maxHealth, Shader* shader, Texture2D* texture);
+	BasicEntity(float maxHealth);
 	~BasicEntity();
 
 	// states
@@ -37,7 +32,6 @@ public:
 	void setIdle();
 
 	// getters
-	Sprite& getSprite();
 	glm::mat4& getModel();
 	glm::vec2 getPos();
 	
@@ -45,5 +39,4 @@ public:
 	float heal(float heal);
 	float damage(float damage);
 	void move(glm::vec2 vec);
-	void animate(float dt);
 };

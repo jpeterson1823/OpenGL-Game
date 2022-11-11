@@ -10,8 +10,6 @@ class World {
 private:
 	std::vector<BasicEntity*> entities;
 
-private:
-	void animateEntities(float dt);
 public:
 	World();
 	~World();

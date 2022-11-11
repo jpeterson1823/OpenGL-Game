@@ -9,6 +9,14 @@ Sprite::Sprite(Shader* shader, Texture2D* texture) {
 	// Initialize shader and texture
 	this->shader = shader;
 	this->texture = texture;
+	if (shader == nullptr) {
+		std::cout << "sprite was passed null ptr for shader" << std::endl;
+		exit(-1000);
+	}
+	if (texture == nullptr) {
+		std::cout << "sprite was passed null ptr for texture" << std::endl;
+		exit(-1000);
+	}
 	modelMatrix = glm::mat4(1.0f);
 }
 
@@ -57,4 +65,15 @@ Texture2D* Sprite::getTexture() {
 
 int Sprite::getVertexArray() {
 	return vao;
+}
+
+void Sprite::use() {
+	texture->bind();
+	shader->use();
+}
+
+void Sprite::setMVP(glm::mat4 model, glm::mat4 view, glm::mat4 projection) {
+	shader->setMat4("model", model);
+	shader->setMat4("view", view);
+	shader->setMat4("projection", projection);
 }

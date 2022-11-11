@@ -11,7 +11,6 @@ protected:
 	glm::mat4 modelMatrix;
 
 public:
-	Sprite();
 	Sprite(Shader* shader, Texture2D* texture);
 	~Sprite();
 	void initBufferObjects(float* vertices);
@@ -20,4 +19,6 @@ public:
 	int getVertexArray();
 	Texture2D* getTexture();
 	Shader* getShader();
+	void use();
+	void setMVP(glm::mat4 model, glm::mat4 view, glm::mat4 projection);
 };

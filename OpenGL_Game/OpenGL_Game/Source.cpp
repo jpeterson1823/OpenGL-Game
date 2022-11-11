@@ -9,13 +9,11 @@
 #include "Window.hpp"
 #include "Camera.hpp"
 #include "Renderer.hpp"
-#include "Player.hpp"
-#include "EnemyEntity.hpp"
+#include "ResourceManager.hpp"
 #include "Line.hpp"
-#include "Tile.hpp"
 
-//#define _CRTDBG_MAP_ALLOC
-//#include <crtdbg.h>
+#define _CRTDBG_MAP_ALLOC
+#include <crtdbg.h>
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
@@ -26,7 +24,7 @@ const unsigned int SCR_HEIGHT = 1080;
 
 void framebuffer_size_callback(GLFWwindow* w, int width, int height);
 void processInput(GLFWwindow* w, Camera& camera, Player& player);
-Line getMouseTrace(Window& window, Renderer& renderer, Player& player, Shader& lineShader);
+Line getMouseTrace(Window& window, Player& player, Shader& lineShader);
 
 int main(int argc, char* argv[]) {
 	// enable memory leak check
@@ -46,32 +44,8 @@ int main(int argc, char* argv[]) {
 
 	Camera camera;
 	World world;
-	Renderer renderer(&camera, SCR_WIDTH, SCR_HEIGHT);
 	Shader lineShader("graphics/shaders/line.vert", "graphics/shaders/line.frag");
-
-
-	
-	/*// Tile-base background test. has some odd artifacting
-	// generate tile and shader texture
-	Shader* tileShader = new Shader(
-		"graphics/shaders/background.vert",
-		"graphics/shaders/background.frag"
-	);
-	Texture2D* tileTexture = new Texture2D(
-		"graphics/textures/tiles/zeo254.png",
-		true
-	);
-	std::vector<Tile*> tiles;
-	int dimension = 32;
-	float scale = 40.0f;
-	Tile* tile;
-	for (int y = -dimension / 2; y < dimension / 2 + 1; y++) {
-		for (int x = -dimension / 2; x < dimension / 2 + 1; x++) {
-			//std::cout << "Placing tile at (" << (float)x << ',' << (float)y << ")\n";
-			tile = new Tile(glm::vec2((float)x, (float)y), tileShader, tileTexture);
-			tiles.push_back(tile);
-		}
-	}*/
+	Renderer::Initialize(&camera, SCR_WIDTH, SCR_HEIGHT);
 
 	// spawn test dummy
 	world.spawnEnemy(glm::vec2(0.0f, 0.5f));
@@ -87,31 +61,26 @@ int main(int argc, char* argv[]) {
 
 		// process input
 		processInput(window.ptr(), camera, *world.getPlayer());
-		Line mouseTrace = getMouseTrace(window, renderer, *world.getPlayer(), lineShader);
+		//Line mouseTrace = getMouseTrace(window, *world.getPlayer(), lineShader);
 
 		// rendering settings
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		world.turn(deltaTime);
-		renderer.renderWorld(world);
-		renderer.drawLine(mouseTrace);
+		Renderer::RenderWorld(world);
+		//Renderer::DrawLine(mouseTrace);
 		//for (Tile* t : tiles)
 		//	renderer.renderTile(*t);
-		renderer.update();
+		Renderer::Update();
 
 		// check & call events + swap buffers
 		glfwPollEvents();
 		glfwSwapBuffers(window.ptr());
 	}
-
-	//for (Tile* t : tiles)
-	//	delete t;
-
-	//delete tileShader;
-	//delete tileTexture;
 	
+	ResourceManager::DestroyResources();
 	window.terminate();
+
 	//_CrtDumpMemoryLeaks();
 	return 0;
 }
@@ -160,13 +129,13 @@ void processInput(GLFWwindow* w, Camera& camera, Player& player) {
 	}
 }
 
-Line getMouseTrace(Window& window, Renderer& renderer, Player& player, Shader& lineShader) {
+Line getMouseTrace(Window& window, Player& player, Shader& lineShader) {
 	// get cursor position
 	double xpos, ypos;
 	glfwGetCursorPos(window.ptr(), &xpos, &ypos);
 
 	// perform literal magic to convert to world coords
-	glm::mat4 temp = glm::inverse(renderer.getProjection() * renderer.getView());
+	glm::mat4 temp = glm::inverse(Renderer::GetProjection() * Renderer::GetView());
 	glm::vec4 v = 2.0f * (glm::vec4(2.0f*xpos/SCR_WIDTH - 1.0f, 1.0f - 2.0f*ypos/SCR_HEIGHT, 0.0f, 1.0f) * temp);
 	
 	// create line to be rendered
