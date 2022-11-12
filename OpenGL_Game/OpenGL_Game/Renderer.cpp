@@ -23,6 +23,7 @@ void Renderer::RenderEntity(BasicEntity& e) {
 	glm::mat4 view = glm::translate(camera->view, pos);
 
 	Animation* a = ResourceManager::GetAnimation(&e);
+	a->getTexture()->bind();
 	a->getShader()->use();
 	a->getShader()->setMVP(e.getModel(), view, projection);
 

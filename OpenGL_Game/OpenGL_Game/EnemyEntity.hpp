@@ -10,5 +10,5 @@ public:
 	static const char* FRAG_PATH;
 	static const char* SPRITE_SHEET_PATH;
 
-	EnemyEntity(unsigned short id);
+	EnemyEntity();
 };

@@ -4,8 +4,8 @@ std::vector<Shader*> ResourceManager::shaders;
 std::vector<Texture2D*> ResourceManager::textures;
 std::vector<Animation*> ResourceManager::idleAnimations;
 std::vector<Animation*> ResourceManager::activeAnimations;
-std::map<unsigned short, Animation*> ResourceManager::idleAnimationMap;
-std::map<unsigned short, Animation*> ResourceManager::activeAnimationMap;
+std::map<BasicEntity*, Animation*> ResourceManager::idleAnimationMap;
+std::map<BasicEntity*, Animation*> ResourceManager::activeAnimationMap;
 
 Shader* ResourceManager::GenerateShader(const char* vertexPath, const char* fragmentPath) {
 	Shader* s = new Shader(vertexPath, fragmentPath);
@@ -23,7 +23,7 @@ Animation* ResourceManager::GenerateIdleAnimation(BasicEntity* entity, Shader* s
 	Animation* a = new Animation(shader, texture, spriteWidth);
 	a->parseSprites(64, 64, 6, 5);
 	idleAnimations.push_back(a);
-	idleAnimationMap.insert(std::pair<unsigned short, Animation*>(entity->getID(), a));
+	idleAnimationMap.insert(std::pair<BasicEntity*, Animation*>(entity, a));
 	return a;
 }
 
@@ -31,19 +31,19 @@ Animation* ResourceManager::GenerateActiveAnimation(BasicEntity* entity, Shader*
 	Animation* a = new Animation(shader, texture, spriteWidth);
 	a->parseSprites(64, 64, 5, 4);
 	activeAnimations.push_back(a);
-	activeAnimationMap.insert(std::pair<unsigned short, Animation*>(entity->getID(), a));
+	activeAnimationMap.insert(std::pair<BasicEntity*, Animation*>(entity, a));
 	return a;
 }
 
 
 Animation* ResourceManager::GetAnimation(BasicEntity* entity) {
-	std::map<unsigned short, Animation*>::iterator f;
+	std::map<BasicEntity*, Animation*>::iterator f;
 	if (entity->isMoving()) {
-		f = activeAnimationMap.find(entity->getID());
+		f = activeAnimationMap.find(entity);
 		if (f == activeAnimationMap.end())
 			return nullptr;
 	} else {
-		f = idleAnimationMap.find(entity->getID());
+		f = idleAnimationMap.find(entity);
 		if (f == idleAnimationMap.end())
 			return nullptr;
 	}

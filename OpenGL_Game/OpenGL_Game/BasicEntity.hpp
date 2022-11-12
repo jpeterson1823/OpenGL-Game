@@ -21,7 +21,7 @@ protected:
 
 public:
 	//BasicEntity(float maxHealth, const char* vertPath, const char* fragPath, std::string texFolderPath);
-	BasicEntity(float maxHealth, unsigned short id);
+	BasicEntity(float maxHealth);
 	~BasicEntity();
 
 	// states

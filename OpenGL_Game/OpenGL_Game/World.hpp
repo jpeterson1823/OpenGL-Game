@@ -11,8 +11,6 @@ private:
 	std::vector<BasicEntity*> entities;
 	std::vector<unsigned short> activeIDs;
 	
-	unsigned short generateID();
-
 public:
 	World();
 	~World();

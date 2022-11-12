@@ -73,8 +73,8 @@ int main(int argc, char* argv[]) {
 
 		if (tickCounter >= tickDelay) {
 			tickCounter = 0;
-			world.turn(deltaTime);
 		}
+		world.turn(deltaTime);
 		Renderer::RenderWorld(world);
 		Renderer::DrawLine(mouseTrace);
 		Renderer::Update();
@@ -120,11 +120,20 @@ void processInput(GLFWwindow* w, Camera& camera, Player& player) {
 	if (glfwGetKey(w, GLFW_KEY_A) == GLFW_PRESS) {
 		camera.move(-glm::cross(camera.getDirection(), camera.getUp()) * cameraSpeed);
 		player.move(-glm::cross(camera.getDirection(), camera.getUp()) * cameraSpeed);
+		player.setFacingLeft();
+		playerMoved = true;
 	}
 	if (glfwGetKey(w, GLFW_KEY_D) == GLFW_PRESS) {
 		camera.move(glm::cross(camera.getDirection(), camera.getUp()) * cameraSpeed);
 		player.move(glm::cross(camera.getDirection(), camera.getUp()) * cameraSpeed);
+		player.setFacingRight();
+		playerMoved = true;
 	}
+
+	if (playerMoved)
+		player.setMoving();
+	else
+		player.setIdle();
 
 	// debug stuffs
 	if (glfwGetKey(w, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)

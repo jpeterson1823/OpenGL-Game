@@ -10,8 +10,8 @@ private:
 	static std::vector<Texture2D*> textures;
 	static std::vector<Animation*> idleAnimations;
 	static std::vector<Animation*> activeAnimations;
-	static std::map<unsigned short, Animation*> idleAnimationMap;
-	static std::map<unsigned short, Animation*> activeAnimationMap;
+	static std::map<BasicEntity*, Animation*> idleAnimationMap;
+	static std::map<BasicEntity*, Animation*> activeAnimationMap;
 public:
 	static Shader* GenerateShader(const char* vertexPath, const char* fragmentPath);
 	static Texture2D* GenerateTexture2D(const char* texturePath, unsigned int texUnit=GL_TEXTURE0);

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <filesystem>
 
-BasicEntity::BasicEntity(float maxHealth, unsigned short id) {
+BasicEntity::BasicEntity(float maxHealth) {
 	// set min and max position for entities
 	MAX_POS = 100.0;
 	MIN_POS = -MAX_POS;
@@ -63,19 +63,23 @@ void BasicEntity::setPos(glm::vec2 pos) {
 }
 
 void BasicEntity::setMoving() {
-	moving = true;
+	if (!moving)
+		moving = true;
 }
 
 void BasicEntity::setIdle() {
-	moving = false;
+	if (moving)
+		moving = false;
 }
 
 void BasicEntity::setFacingRight() {
-	facingRight = true;
+	if (!facingRight)
+		facingRight = true;
 }
 
 void BasicEntity::setFacingLeft() {
-	facingRight = false;
+	if (facingRight)
+		facingRight = false;
 }
 
 float BasicEntity::heal(float heal) {
