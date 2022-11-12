@@ -23,7 +23,6 @@ Texture2D::Texture2D(const char* path, bool alphaEnabled, unsigned int texUnit) 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	// load image and generate texture data
-	int width, height, nrChannels;
 	unsigned char* data;
 	stbi_set_flip_vertically_on_load(true);
 	if (alphaEnabled)
@@ -58,6 +57,14 @@ unsigned int Texture2D::getID() {
 
 unsigned int Texture2D::getTexUnit() {
 	return this->texUnit;
+}
+
+int Texture2D::getWidth() {
+	return width;
+}
+
+int Texture2D::getHeight() {
+	return height;
 }
 
 void Texture2D::bind() {

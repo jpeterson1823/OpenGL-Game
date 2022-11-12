@@ -4,7 +4,7 @@
 #include <iostream>
 #include <filesystem>
 
-BasicEntity::BasicEntity(float maxHealth) {
+BasicEntity::BasicEntity(float maxHealth, unsigned short id) {
 	// set min and max position for entities
 	MAX_POS = 100.0;
 	MIN_POS = -MAX_POS;
@@ -14,9 +14,11 @@ BasicEntity::BasicEntity(float maxHealth) {
 		this->maxHealth = maxHealth;
 	else
 		this->maxHealth = 100.0f;
+	this->id = id;
 	health = this->maxHealth;
 	living = true;
 	moving = false;
+	facingRight = true;
 
 	// set initial position to origin
 	pos = glm::vec2(0.0f);
@@ -36,12 +38,24 @@ bool BasicEntity::isAlive() {
 	return living;
 }
 
+bool BasicEntity::isMoving() {
+	return moving;
+}
+
+bool BasicEntity::isFacingRight() {
+	return facingRight;
+}
+
 glm::mat4& BasicEntity::getModel() {
 	return model;
 }
 
 glm::vec2 BasicEntity::getPos() {
 	return pos;
+}
+
+unsigned short BasicEntity::getID() {
+	return id;
 }
 
 void BasicEntity::setPos(glm::vec2 pos) {
@@ -54,6 +68,14 @@ void BasicEntity::setMoving() {
 
 void BasicEntity::setIdle() {
 	moving = false;
+}
+
+void BasicEntity::setFacingRight() {
+	facingRight = true;
+}
+
+void BasicEntity::setFacingLeft() {
+	facingRight = false;
 }
 
 float BasicEntity::heal(float heal) {

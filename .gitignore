@@ -27,3 +27,12 @@ OpenGL_Game/OpenGL_Game/OpenGL_Game.aps
 *.vcxproj
 *.filters
 *.exe
+OpenGL_Game/OpenGL_Game/x64/Debug/OpenGL_Game.Build.CppClean.log
+OpenGL_Game/OpenGL_Game/x64/Debug/OpenGL_Game.ilk
+OpenGL_Game/OpenGL_Game/x64/Debug/OpenGL_Game.log
+OpenGL_Game/OpenGL_Game/x64/Debug/vc143.idb
+OpenGL_Game/OpenGL_Game/x64/Debug/vc143.pdb
+OpenGL_Game/x64/Debug/OpenGL_Game.exe
+OpenGL_Game/x64/Debug/OpenGL_Game.pdb
+*.bin
+*.vcxproj

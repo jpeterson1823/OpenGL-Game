@@ -72,8 +72,3 @@ void Sprite::use() {
 	shader->use();
 }
 
-void Sprite::setMVP(glm::mat4 model, glm::mat4 view, glm::mat4 projection) {
-	shader->setMat4("model", model);
-	shader->setMat4("view", view);
-	shader->setMat4("projection", projection);
-}

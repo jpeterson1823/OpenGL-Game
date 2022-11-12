@@ -1,61 +1,91 @@
 #include "ResourceManager.hpp"
 
-std::map<BasicEntity*, Sprite*> ResourceManager::spriteMap;
+std::vector<Shader*> ResourceManager::shaders;
+std::vector<Texture2D*> ResourceManager::textures;
+std::vector<Animation*> ResourceManager::idleAnimations;
+std::vector<Animation*> ResourceManager::activeAnimations;
+std::map<unsigned short, Animation*> ResourceManager::idleAnimationMap;
+std::map<unsigned short, Animation*> ResourceManager::activeAnimationMap;
 
-void ResourceManager::GenerateSprite(BasicEntity& entity, const char* vertexPath, const char* fragmentPath, const char* texturePath) {
+Shader* ResourceManager::GenerateShader(const char* vertexPath, const char* fragmentPath) {
 	Shader* s = new Shader(vertexPath, fragmentPath);
-	Texture2D* t = new Texture2D(texturePath, true);
-
-	float imgWidth = 576.0f;
-	float imgHeight = 512.0f;
-	float spriteDimension = 64.0f;
-	float xSpriteUnit = spriteDimension / imgWidth;
-	float ySpriteUnit = spriteDimension / imgHeight;
-
-	float x = 0;
-	float y = 6;
-	float xStart = x * xSpriteUnit;
-	float yEnd = (y + 1.0f) * ySpriteUnit;
-	float xEnd = (x + 1.0f) * xSpriteUnit;
-	float yStart = y * ySpriteUnit;
-
-	float v[30] = {
-		// positions         // texture coords
-		-0.5f,  0.5f, 0.0f,  xStart, yEnd, // top left 
-		 0.5f,  0.5f, 0.0f,  xEnd, yEnd, // top right
-		 0.5f, -0.5f, 0.0f,  xEnd, yStart, // bottom right
-
-		 0.5f, -0.5f, 0.0f,  xEnd, yStart, // bottom right
-		-0.5f, -0.5f, 0.0f,  xStart, yStart, // bottom left
-		-0.5f,  0.5f, 0.0f,  xStart, yEnd  // top left 
-	};
-
-	/*for (int x = 0; x < 5; x++) {
-		float xStart = x * xSpriteUnit;
-		float yEnd = (y + 1.0f) * ySpriteUnit;
-		float xEnd = (x + 1.0f) * xSpriteUnit;
-		float yStart = y * ySpriteUnit;
-
-		idleSprites.push_back(sprite);
-	}*/
-	Sprite* sprite = new Sprite(s, t);
-	sprite->initBufferObjects(v);
-	spriteMap.insert(std::pair<BasicEntity*, Sprite*>(&entity, sprite));
+	shaders.push_back(s);
+	return s;
 }
 
-Sprite* ResourceManager::GetSprite(BasicEntity& entity) {
-	auto f = spriteMap.find(&entity);
-	if (f == spriteMap.end())
-		return nullptr;
+Texture2D* ResourceManager::GenerateTexture2D(const char* texturePath, unsigned int texUnit) {
+	Texture2D* t = new Texture2D(texturePath, true);
+	textures.push_back(t);
+	return t;
+}
+
+Animation* ResourceManager::GenerateIdleAnimation(BasicEntity* entity, Shader* shader, Texture2D* texture, int spriteWidth) {
+	Animation* a = new Animation(shader, texture, spriteWidth);
+	a->parseSprites(64, 64, 6, 5);
+	idleAnimations.push_back(a);
+	idleAnimationMap.insert(std::pair<unsigned short, Animation*>(entity->getID(), a));
+	return a;
+}
+
+Animation* ResourceManager::GenerateActiveAnimation(BasicEntity* entity, Shader* shader, Texture2D* texture, int spriteWidth) {
+	Animation* a = new Animation(shader, texture, spriteWidth);
+	a->parseSprites(64, 64, 5, 4);
+	activeAnimations.push_back(a);
+	activeAnimationMap.insert(std::pair<unsigned short, Animation*>(entity->getID(), a));
+	return a;
+}
+
+
+Animation* ResourceManager::GetAnimation(BasicEntity* entity) {
+	std::map<unsigned short, Animation*>::iterator f;
+	if (entity->isMoving()) {
+		f = activeAnimationMap.find(entity->getID());
+		if (f == activeAnimationMap.end())
+			return nullptr;
+	} else {
+		f = idleAnimationMap.find(entity->getID());
+		if (f == idleAnimationMap.end())
+			return nullptr;
+	}
 	return f->second;
 }
 
-void ResourceManager::DestroyResources() {
-	for (auto pair = spriteMap.begin(); pair != spriteMap.cend();) {
-		delete pair->second->getShader();
-		delete pair->second->getTexture();
-		delete pair->second;
-		spriteMap.erase(pair++);
+void ResourceManager::DestroyShader(unsigned int id) {
+	for (int i = 0; i < shaders.size(); i++) {
+		if (shaders[i]->getID() == id) {
+			delete shaders[i];
+			shaders.erase(shaders.begin() + i);
+			break;
+		}
 	}
-	spriteMap.clear();
+}
+
+void ResourceManager::DestroyTexture2D(unsigned int id) {
+	for (int i = 0; i < textures.size(); i++) {
+		if (textures[i]->getID() == id) {
+			delete textures[i];
+			textures.erase(textures.begin() + i);
+			break;
+		}
+	}
+}
+
+void ResourceManager::DestroyResources() {
+	// delete animations
+	for (auto pair = activeAnimationMap.begin(); pair != activeAnimationMap.cend();) {
+		delete pair->second;
+		activeAnimationMap.erase(pair++);
+	}
+	activeAnimationMap.clear();
+	for (auto pair = idleAnimationMap.begin(); pair != idleAnimationMap.cend();) {
+		delete pair->second;
+		idleAnimationMap.erase(pair++);
+	}
+	idleAnimationMap.clear();
+
+	// delete shaders and textures
+	for (Shader* s : shaders)
+		delete s;
+	for (Texture2D* t : textures)
+		delete t;
 }

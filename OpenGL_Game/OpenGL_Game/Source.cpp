@@ -17,7 +17,6 @@
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
-float fps = 0.0f;
 
 const unsigned int SCR_WIDTH  = 1920;
 const unsigned int SCR_HEIGHT = 1080;
@@ -51,31 +50,45 @@ int main(int argc, char* argv[]) {
 	world.spawnEnemy(glm::vec2(0.0f, 0.5f));
 
 	// window loop
+	float tickDelay = 1.0f/120.0f;
+	float tickCounter = 0.0f;
 	float currentFrame;
+	float frameCounter = 0.0f;
+	int frames = 0;
 	while (!glfwWindowShouldClose(window.ptr())) {
 		// calc dt
 		currentFrame = static_cast<float>(glfwGetTime());
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
-		fps = 1.0f / deltaTime;
+		tickCounter += deltaTime;
+		frameCounter += deltaTime;
 
 		// process input
 		processInput(window.ptr(), camera, *world.getPlayer());
-		//Line mouseTrace = getMouseTrace(window, *world.getPlayer(), lineShader);
+		Line mouseTrace = getMouseTrace(window, *world.getPlayer(), lineShader);
 
 		// rendering settings
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		if (tickCounter >= tickDelay) {
+			tickCounter = 0;
+			world.turn(deltaTime);
+		}
 		Renderer::RenderWorld(world);
-		//Renderer::DrawLine(mouseTrace);
-		//for (Tile* t : tiles)
-		//	renderer.renderTile(*t);
+		Renderer::DrawLine(mouseTrace);
 		Renderer::Update();
 
 		// check & call events + swap buffers
 		glfwPollEvents();
 		glfwSwapBuffers(window.ptr());
+		frames++;
+
+		if (frameCounter >= 1.0f) {
+			std::cout << frames << "FPS" << std::endl;
+			frames = 0;
+			frameCounter = 0.0f;
+		}
 	}
 	
 	ResourceManager::DestroyResources();
@@ -99,22 +112,18 @@ void processInput(GLFWwindow* w, Camera& camera, Player& player) {
 	if (glfwGetKey(w, GLFW_KEY_W) == GLFW_PRESS) {
 		camera.move(cameraSpeed * camera.getUp());
 		player.move(cameraSpeed * camera.getUp());
-		playerMoved = true;
 	}
 	if (glfwGetKey(w, GLFW_KEY_S) == GLFW_PRESS) {
 		camera.move(-cameraSpeed * camera.getUp());
 		player.move(-cameraSpeed * camera.getUp());
-		playerMoved = true;
 	}
 	if (glfwGetKey(w, GLFW_KEY_A) == GLFW_PRESS) {
 		camera.move(-glm::cross(camera.getDirection(), camera.getUp()) * cameraSpeed);
 		player.move(-glm::cross(camera.getDirection(), camera.getUp()) * cameraSpeed);
-		playerMoved = true;
 	}
 	if (glfwGetKey(w, GLFW_KEY_D) == GLFW_PRESS) {
 		camera.move(glm::cross(camera.getDirection(), camera.getUp()) * cameraSpeed);
 		player.move(glm::cross(camera.getDirection(), camera.getUp()) * cameraSpeed);
-		playerMoved = true;
 	}
 
 	// debug stuffs
@@ -122,11 +131,6 @@ void processInput(GLFWwindow* w, Camera& camera, Player& player) {
 		camera.move(-camera.getDirection() * (cameraSpeed * 10));
 	if (glfwGetKey(w, GLFW_KEY_RIGHT_CONTROL) == GLFW_PRESS)
 		camera.move(camera.getDirection() * (cameraSpeed * 10));
-	if (glfwGetKey(w, GLFW_KEY_SPACE) == GLFW_PRESS) {
-		glm::vec3 pos = camera.getPos();
-		std::cout << "Camera Position: (" << pos.x << ',' << pos.y << ',' << pos.z << ")\n";
-		std::cout << "FPS: " << fps << "\n";
-	}
 }
 
 Line getMouseTrace(Window& window, Player& player, Shader& lineShader) {

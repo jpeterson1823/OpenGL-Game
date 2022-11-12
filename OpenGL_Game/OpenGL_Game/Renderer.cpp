@@ -1,6 +1,8 @@
 #include "Renderer.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include "ResourceManager.hpp"
+#include "Animation.hpp"
+#include <iostream>
 
 // for test func
 #include "Sprite.hpp"
@@ -20,28 +22,22 @@ void Renderer::RenderEntity(BasicEntity& e) {
 	glm::vec3 pos  = glm::vec3(e.getPos(), 0.0f);
 	glm::mat4 view = glm::translate(camera->view, pos);
 
-	Sprite* s = ResourceManager::GetSprite(e);
-	s->use();
-	s->setMVP(e.getModel(), view, projection);
+	Animation* a = ResourceManager::GetAnimation(&e);
+	a->getShader()->use();
+	a->getShader()->setMVP(e.getModel(), view, projection);
 
-	glBindVertexArray(s->getVertexArray());
+	if (e.isFacingRight())
+		a->getShader()->setInt("facingRight", 1);
+	else
+		a->getShader()->setInt("facingRight", 0);
+
+	glBindVertexArray(a->getCurrentFrame()->getVertexArray());
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
 void Renderer::RenderWorld(World& world) {
 	for (BasicEntity* e : world.getEntities())
 		Renderer::RenderEntity(*e);
-}
-
-void Renderer::RenderTile(Tile& tile) {
-	glm::vec3 pos = glm::vec3(tile.getPos(), 0.0f);
-
-	Sprite* s = tile.getSprite();
-	s->getShader()->use();
-	s->setMVP(tile.getModel(), camera->view, projection);
-
-	glBindVertexArray(s->getVertexArray());
-	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
 void Renderer::Update() {

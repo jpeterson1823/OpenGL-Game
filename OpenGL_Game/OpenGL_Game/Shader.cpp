@@ -122,3 +122,11 @@ void Shader::setVec3(const std::string& name, glm::vec3& vec) const {
 unsigned int Shader::getID() {
 	return this->id;
 }
+
+void Shader::setMVP(glm::mat4 model, glm::mat4 view, glm::mat4 projection) {
+	setMat4("model", model);
+	setMat4("view", view);
+	setMat4("projection", projection);
+}
+
+
